@@ -1,0 +1,14 @@
+{
+  "timestamp_utc": "2026-04-15T02:15:59.515564+00:00",
+  "input_hash": "a949e8362a0ff5a2d77a72545070cecb12065e8738467ab90fc7ab5ed026e97e",
+  "output_hash": "6a21c5bc7d7db5fdfbc74ae69a77b22afc50469301d79f48d296a7793fb1ebc8",
+  "bundle_hash": "cef5a984c35d1430bdc0824350ddf36edb0f19a8260773b244731f34df341f68",
+  "model_params": {
+    "temperature": 0,
+    "seed": 42,
+    "rsa_bits": 2048,
+    "encoding": "UTF-8"
+  },
+  "signature_base64": "NCBJ2vdP9WIkfMq4nNypw3J36nbyY7XMbFUaEVxzXHhsF1MWWmzIbq+Xzklr5bjr7HH3CfdeLK/03Neo3uWFQslDeW2HYKMcnaSHDPtPEvCuznJiFx9PeFPKFWfhDwcPQmf0kcZSNCDAU3XJCaTnAuA6qDGoQdvEl3SnxbWFq3AUYa7/bcBA3Q8j1/vzacQaux32hyJJMalAubkYd1ISjRAoEaawUoe50VaymMeeS2YJB0C3aVGjRC9IXDcc4ueCgpTGPq9gDWNOMhwNP0Vvd28h+M8RanzKEo6mYBbGm+oDeNEsoHJU18v9GpHAOKdhoo43cOGa/tuc0GGTdJfN5A==",
+  "prev_hash": "a97ed8c29aa3f753e49188c4285cb4d816d4b40899509424ce4ecbf430f55db0"
+}
