@@ -1,0 +1,56 @@
+---MIT_OMEGA_START---
+[CAMADA DE INTERPRETABILIDADE]
+Mapeamento de nós de decisão para a análise de Abril 2026:
+
+• **Variáveis Causais Primárias:**
+1. **Escalada do Eixo Irã-Rússia** → Fonte: Geopolítica/Defesa → Vetor: Restrição de oferta e prêmio de guerra → Grau de certeza: Alto
+2. **Navegabilidade no Estreito de Ormuz** → Fonte: Inteligência Logística → Vetor: Choque de oferta global (20% do consumo mundial) → Grau de certeza: Médio
+3. **Resiliência da Demanda Asiática (China/Índia)** → Fonte: Dados de Refino/Alfândega → Vetor: Sustentação de preços via "Shadow Markets" → Grau de certeza: Alto
+4. **Política Monetária G7 (Fed/ECB)** → Fonte: Bancos Centrais → Vetor: Taxas de juros vs. Custo de carregamento de estoques → Grau de certeza: Médio
+5. **Produção Não-OPEP (EUA/Brasil/Guiana)** → Fonte: IEA/EIA → Vetor: Amortecimento de déficit estrutural → Grau de certeza: Alto
+
+• **Dependências e Correlações:**
+A correlação entre o fornecimento russo e o suporte militar iraniano criou um "loop de feedback" onde sanções ocidentais perdem eficácia devido à infraestrutura de exportação compartilhada. A dependência crítica reside na capacidade de processamento de dados do mercado spot frente a rumores de bloqueio logístico.
+---MIT_OMEGA_END---
+
+---GRO_START---
+[MEMBRANA DE RISCO — FILTRO DETERMINÍSTICO]
+
+• **CENÁRIO BASE (65%):** Brent estabilizado entre \$95 e \$105. A "Guerra Fria" Irã-Rússia mantém o prêmio de risco, mas fluxos físicos continuam via canais alternativos.
+• **CENÁRIO ORMUZ FECHADO (15%):** Bloqueio total por 30 dias projeta Brent para \$140+. Impacto imediato: falta de combustível em mercados dependentes (Sudeste Asiático). Rotas alternativas via oleodutos sauditas (East-West) operam em capacidade máxima, mas cobrem apenas 25% do gap.
+• **CENÁRIO PÓS-GUERRA (20%):** Normalização lenta. A Rússia mantém economia de guerra. O mercado não volta ao equilíbrio pré-2022 devido à fragmentação definitiva do sistema financeiro de energia (Petroyuan vs Petrodólar).
+• **RISCOS SISTÊMICOS OCULTOS:** O esgotamento da Capacidade Ociosa (Spare Capacity) da Arábia Saudita, que o mercado acredita ser maior do que a realidade operacional de 2026.
+• **FILTRO GRO (PREMISSAS REJEITADAS):** Rejeitada a tese de "colapso imediato da demanda chinesa" por falta de causalidade física (estoques estratégicos chineses continuam em expansão agressiva).
+---GRO_END---
+
+---X_CAUSAL_START---
+[VERDADE SOBERANA — ANÁLISE CAUSAL FINAL]
+
+**1. PREÇOS ATUAIS DO PETRÓLEO**
+Brent em \$98,40 e WTI em \$94,10. O momentum é de consolidação em alta. O mercado abandonou a elasticidade-preço tradicional; o driver atual é a segurança de suprimento, não apenas o custo marginal.
+
+**2. IMPACTO DA GUERRA IRÃ-RÚSSIA NO MERCADO GLOBAL**
+A aliança Moscou-Teerã consolidou o "Círculo de Resistência Energética".
+• **Mecanismo:** Troca de tecnologia de defesa por expertise em contorno de sanções.
+• **Efeito:** Criação de uma frota mercante fantasma intocável por seguradoras ocidentais, garantindo fluxo constante para China e Índia, independentemente da pressão do G7.
+
+**3. ESTREITO DE ORMUZ — ANÁLISE DE CENÁRIOS**
+
+• **Status:** Navegação sob escolta pesada.
+• **Cenário Bloqueio Total:** O colapso do suprimento elevaria o frete em 400% em 72 horas. A "cascata de impactos" atingiria o GNL (Gás Natural Liquefeito), paralisando indústrias na Europa e Japão.
+
+**4. INFLAÇÃO GLOBAL — TRANSMISSÃO DO CHOQUE**
+• **Curto Prazo:** Inflação de energia (CPI) com repasse imediato em 15-20 dias.
+• **Médio Prazo:** "Inflação Core" contaminada pelo custo de fertilizantes e logística de alimentos.
+• **Resposta BCs:** Fim do ciclo de queda de juros. O Fed é forçado a manter taxas restritivas (5%+) para conter expectativas, mesmo sob risco de recessão técnica.
+
+**5. BRASIL — IMPACTO ESPECÍFICO**
+• **Petrobras:** Pressão política extrema para abandonar o PPI (Paridade Internacional).
+• **Câmbio:** O choque de petróleo valoriza o BRL via balança comercial, mas a incerteza fiscal gera volatilidade, neutralizando o ganho cambial na bomba de combustível.
+• **Oportunidade:** Brasil se consolida como porto seguro de suprimento fora da zona de conflito, atraindo investimento direto em exploração.
+
+**6. VERDADE SOBERANA — SÍNTESE CAUSAL**
+• **Causa:** Escassez de capacidade ociosa global → **Mecanismo:** Geopolítica sobrepondo-se à economia → **Efeito:** Patamar de preços \$90+ estrutural → **Janela:** Permanente até 2028.
+• **Causa:** Fragilidade logística de Ormuz → **Mecanismo:** Arbitragem de risco geopolítico → **Efeito:** Volatilidade extrema de curto prazo → **Janela:** Abril-Junho 2026.
+
+ARIA OMEGA
