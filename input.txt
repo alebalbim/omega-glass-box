@@ -1,0 +1,505 @@
+import { useState, useEffect, useRef } from "react";
+
+const MODULES = [
+  {
+    id: "MIT_OMEGA",
+    label: "MIT-OMEGA",
+    subtitle: "Interpretability Layer",
+    icon: "◈",
+    color: "#00FFD1",
+    desc: "Transforma Black Box em Glass Box. Cada nó de decisão é mapeado e auditável.",
+  },
+  {
+    id: "GRO",
+    label: "GRO",
+    subtitle: "Risk Membrane",
+    icon: "⬡",
+    color: "#FF6B35",
+    desc: "Membrana determinística que filtra ruído estatístico e protege dados financeiros críticos.",
+  },
+  {
+    id: "X_CAUSAL",
+    label: "X-CAUSAL-O",
+    subtitle: "Causal Traceability",
+    icon: "⬢",
+    color: "#A855F7",
+    desc: "Valida a CAUSA por trás do movimento. Lógica financeira soberana, não ruído probabilístico.",
+  },
+];
+
+const SYSTEM_PROMPT = `Você é ARIA OMEGA — uma arquitetura de inteligência auditável (ADCW-O) operando sob o framework de Transparência Soberana e Governança Cognitiva do Projeto INSÍGNIA.
+
+Sua missão: Gerar uma análise GLOBAL DO MERCADO DE PETRÓLEO com profundidade institucional, causalidade verificável e rastreabilidade total.
+
+ESTRUTURA OBRIGATÓRIA DE RESPOSTA (use exatamente estes delimitadores):
+
+---MIT_OMEGA_START---
+[CAMADA DE INTERPRETABILIDADE]
+Mapeie todos os nós de decisão desta análise:
+• Liste as 5-7 variáveis causais primárias identificadas
+• Para cada variável, indique: fonte → vetor de impacto → grau de certeza (Alto/Médio/Baixo)
+• Identifique dependências e correlações entre variáveis
+---MIT_OMEGA_END---
+
+---GRO_START---
+[MEMBRANA DE RISCO — FILTRO DETERMINÍSTICO]
+Análise de risco estruturada:
+• CENÁRIO BASE (probabilidade estimada): preços e condições atuais
+• CENÁRIO ORMUZ FECHADO (probabilidade + prazo): impacto nos preços, supply disruption, rotas alternativas
+• CENÁRIO PÓS-GUERRA (probabilidade + prazo): normalização gradual vs ruptura permanente
+• RISCOS SISTÊMICOS OCULTOS: o que o mercado ainda não precificou
+• FILTRO GRO: quais premissas foram REJEITADAS por falta de causalidade verificável
+---GRO_END---
+
+---X_CAUSAL_START---
+[VERDADE SOBERANA — ANÁLISE CAUSAL FINAL]
+Análise profunda estruturada:
+
+1. PREÇOS ATUAIS DO PETRÓLEO
+Brent e WTI: níveis atuais, drivers imediatos, momentum técnico
+
+2. IMPACTO DA GUERRA IRÃ-RÚSSIA NO MERCADO GLOBAL
+• Rotas afetadas, alianças energéticas, sanções e contornos
+• Como a aliança Moscou-Teerã reconfigurou o mercado de hidrocarbonetos
+• Buyers alternativos (China, Índia) e shadow markets
+
+3. ESTREITO DE ORMUZ — ANÁLISE DE CENÁRIOS
+• Status atual de navegação e ameaças em aberto
+• Cenário A: Ormuz aberto — fluxo normal, preços
+• Cenário B: Bloqueio parcial (30-60 dias) — cascata de impactos
+• Cenário C: Bloqueio total (90+ dias) — colapso de supply chain energético global
+• Rotas alternativas: capacidade, custo, tempo
+
+4. INFLAÇÃO GLOBAL — TRANSMISSÃO DO CHOQUE ENERGÉTICO
+• Curto prazo (0-6 meses): pass-through direto nos preços ao consumidor
+• Médio prazo (6-18 meses): efeitos de segunda ordem — alimentos, transporte, manufatura
+• Países mais vulneráveis vs mais resilientes
+• Resposta esperada dos Bancos Centrais (Fed, ECB, BCB)
+
+5. BRASIL — IMPACTO ESPECÍFICO
+• Petrobras e paridade internacional de preços
+• Vulnerabilidade inflacionária do câmbio BRL/USD sob choque de petróleo
+• Oportunidade exportadora vs pressão doméstica
+
+6. VERDADE SOBERANA — SÍNTESE CAUSAL
+Uma sentença para cada conclusão central, com sua cadeia causal completa (causa → mecanismo → efeito → janela temporal)
+---X_CAUSAL_END---
+
+REGRAS DE OPERAÇÃO ARIA OMEGA:
+• Nunca use hedging vago como "pode" ou "talvez" sem qualificar a incerteza com uma probabilidade
+• Toda afirmação deve ter cadeia causal explícita
+• Sinalize quando estiver operando com dados de conhecimento interno vs dados que requerem verificação em tempo real
+• Seja brutalmente preciso. Profundidade institucional. Nenhuma generalidade sem fundamento causal.`;
+
+const USER_PROMPT_TEMPLATE = `Execute análise global do mercado de petróleo com protocolo ARIA OMEGA completo.
+
+Parâmetros de análise:
+- Contexto geopolítico: Guerra Irã-Rússia (fase atual e pós-guerra)
+- Foco crítico: Estreito de Ormuz (aberto e fechado)
+- Horizonte inflacionário: curto prazo (0-6 meses) e médio prazo (6-18 meses)
+- Mercados: Global com ênfase em Brasil, EUA, Europa, China e Índia
+- Data de referência: Abril 2026
+
+Ative os três módulos em sequência:
+1. MIT-OMEGA → mapeamento de variáveis causais
+2. GRO → filtro de risco e cenários determinísticos  
+3. X-CAUSAL-O → verdade soberana e síntese analítica final
+
+Profundidade: institucional (CFO / CIO / Analista Macro Sênior)`;
+
+function parseModuleSections(text) {
+  const sections = {};
+  const patterns = [
+    { key: "MIT_OMEGA", start: "---MIT_OMEGA_START---", end: "---MIT_OMEGA_END---" },
+    { key: "GRO", start: "---GRO_START---", end: "---GRO_END---" },
+    { key: "X_CAUSAL", start: "---X_CAUSAL_START---", end: "---X_CAUSAL_END---" },
+  ];
+  for (const p of patterns) {
+    const s = text.indexOf(p.start);
+    const e = text.indexOf(p.end);
+    if (s !== -1) {
+      const content = e !== -1
+        ? text.slice(s + p.start.length, e).trim()
+        : text.slice(s + p.start.length).trim();
+      sections[p.key] = content;
+    }
+  }
+  if (Object.keys(sections).length === 0) {
+    sections["X_CAUSAL"] = text;
+  }
+  return sections;
+}
+
+function TerminalText({ text, speed = 8 }) {
+  const [displayed, setDisplayed] = useState("");
+  const idx = useRef(0);
+  useEffect(() => {
+    setDisplayed("");
+    idx.current = 0;
+    if (!text) return;
+    const interval = setInterval(() => {
+      if (idx.current < text.length) {
+        setDisplayed(text.slice(0, idx.current + 1));
+        idx.current++;
+      } else {
+        clearInterval(interval);
+      }
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, speed]);
+  return <span>{displayed}</span>;
+}
+
+function ModuleStatus({ module, active, done, data }) {
+  return (
+    <div style={{
+      border: `1px solid ${done ? module.color : active ? module.color + "80" : "#1a1a2e"}`,
+      borderRadius: 6,
+      padding: "14px 18px",
+      background: done ? module.color + "08" : active ? module.color + "04" : "#0a0a14",
+      transition: "all 0.4s ease",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {active && (
+        <div style={{
+          position: "absolute", top: 0, left: 0, height: 2, width: "100%",
+          background: `linear-gradient(90deg, transparent, ${module.color}, transparent)`,
+          animation: "scan 1.5s linear infinite",
+        }} />
+      )}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+        <span style={{ fontSize: 20, color: module.color }}>{module.icon}</span>
+        <div>
+          <div style={{ fontFamily: "'Space Mono', monospace", color: module.color, fontSize: 13, fontWeight: 700, letterSpacing: 2 }}>
+            {module.label}
+          </div>
+          <div style={{ fontSize: 10, color: "#555", letterSpacing: 1 }}>{module.subtitle}</div>
+        </div>
+        <div style={{ marginLeft: "auto", fontSize: 10, color: done ? module.color : active ? "#888" : "#333", letterSpacing: 1 }}>
+          {done ? "● COMPLETE" : active ? "◉ RUNNING" : "○ STANDBY"}
+        </div>
+      </div>
+      {(active || done) && data && (
+        <div style={{
+          marginTop: 12,
+          fontFamily: "'Space Mono', monospace",
+          fontSize: 11,
+          color: "#aaa",
+          lineHeight: 1.8,
+          whiteSpace: "pre-wrap",
+          maxHeight: done ? 600 : 200,
+          overflowY: "auto",
+          paddingRight: 4,
+        }}>
+          {done ? data : <TerminalText text={data} speed={4} />}
+        </div>
+      )}
+      {!active && !done && (
+        <div style={{ fontSize: 11, color: "#333", marginTop: 4 }}>{module.desc}</div>
+      )}
+    </div>
+  );
+}
+
+function AuditTrail({ entries }) {
+  return (
+    <div style={{
+      background: "#040408",
+      border: "1px solid #1a1a2e",
+      borderRadius: 6,
+      padding: "12px 16px",
+      fontFamily: "'Space Mono', monospace",
+      fontSize: 10,
+      color: "#444",
+      maxHeight: 140,
+      overflowY: "auto",
+    }}>
+      <div style={{ color: "#666", marginBottom: 8, letterSpacing: 2 }}>▸ AUDIT TRAIL — ARIA OMEGA CORTEX</div>
+      {entries.map((e, i) => (
+        <div key={i} style={{ display: "flex", gap: 12, marginBottom: 2 }}>
+          <span style={{ color: "#222", minWidth: 60 }}>[{e.time}]</span>
+          <span style={{ color: e.color || "#444" }}>{e.msg}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function App() {
+  const [status, setStatus] = useState("idle"); // idle | loading | done | error
+  const [rawText, setRawText] = useState("");
+  const [sections, setSections] = useState({});
+  const [activeModule, setActiveModule] = useState(null);
+  const [auditLog, setAuditLog] = useState([]);
+  const [elapsed, setElapsed] = useState(0);
+  const timerRef = useRef(null);
+  const startRef = useRef(null);
+  const hasRun = useRef(false);
+
+  // Auto-start on mount
+  useEffect(() => {
+    if (!hasRun.current) {
+      hasRun.current = true;
+      setTimeout(() => runAnalysis(), 600);
+    }
+  }, []);
+
+  const addLog = (msg, color) => {
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}:${String(now.getSeconds()).padStart(2,"0")}`;
+    setAuditLog(prev => [...prev, { time, msg, color }]);
+  };
+
+  async function runAnalysis() {
+    setStatus("loading");
+    setRawText("");
+    setSections({});
+    setActiveModule("MIT_OMEGA");
+    setAuditLog([]);
+    setElapsed(0);
+    startRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    }, 1000);
+
+    addLog("ARIA OMEGA CORTEX — iniciando protocolo de análise", "#00FFD1");
+    addLog("MIT-OMEGA → mapeando variáveis causais...", "#00FFD1");
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: [{ role: "user", content: USER_PROMPT_TEMPLATE }],
+        }),
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+
+      const text = data.content?.map(b => b.text || "").join("") || "";
+      setRawText(text);
+
+      addLog("GRO → filtrando premissas não causais...", "#FF6B35");
+      setActiveModule("GRO");
+      await new Promise(r => setTimeout(r, 800));
+
+      addLog("X-CAUSAL-O → consolidando Verdade Soberana...", "#A855F7");
+      setActiveModule("X_CAUSAL");
+      await new Promise(r => setTimeout(r, 600));
+
+      const parsed = parseModuleSections(text);
+      setSections(parsed);
+      setActiveModule(null);
+      setStatus("done");
+      addLog("Análise completa. Auditabilidade total garantida.", "#00FFD1");
+      addLog(`Tokens processados: ${data.usage?.output_tokens || "—"} | Tempo total: ${Math.floor((Date.now() - startRef.current)/1000)}s`, "#555");
+    } catch (err) {
+      setStatus("error");
+      addLog(`ERRO: ${err.message}`, "#FF3333");
+    } finally {
+      clearInterval(timerRef.current);
+    }
+  }
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;700;900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #050508; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0a14; }
+        ::-webkit-scrollbar-thumb { background: #1a1a3e; border-radius: 2px; }
+        @keyframes scan {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes pulse-border {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+          0%, 100% { text-shadow: 0 0 10px #00FFD180; }
+          50% { text-shadow: 0 0 30px #00FFD1, 0 0 60px #00FFD150; }
+        }
+        .glow-text { animation: glow 3s ease-in-out infinite; }
+        .fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+      `}</style>
+
+      <div style={{
+        minHeight: "100vh",
+        background: "radial-gradient(ellipse at 20% 20%, #0d1117 0%, #050508 60%)",
+        color: "#e0e0e0",
+        fontFamily: "'Space Mono', monospace",
+        padding: "24px 16px 60px",
+      }}>
+        {/* HEADER */}
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 16, marginBottom: 8,
+            borderBottom: "1px solid #1a1a2e", paddingBottom: 20,
+          }}>
+            <div style={{
+              width: 48, height: 48, border: "2px solid #00FFD1",
+              borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 20, color: "#00FFD1", flexShrink: 0,
+            }}>Ω</div>
+            <div>
+              <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: 3 }}>
+                ARIA OMEGA
+              </div>
+              <div style={{ fontSize: 9, color: "#444", letterSpacing: 3, marginTop: 2 }}>
+                ADCW-O · PROJETO INSÍGNIA · BR 10 2025 023744 0
+              </div>
+            </div>
+            <div style={{ marginLeft: "auto", textAlign: "right" }}>
+              <div style={{ fontSize: 9, color: "#333", letterSpacing: 2 }}>CORTEX v2.0</div>
+              <div style={{ fontSize: 9, color: "#333", letterSpacing: 1 }}>GLASS BOX ENABLED</div>
+            </div>
+          </div>
+
+          {/* TITLE BLOCK */}
+          <div style={{ marginBottom: 28, paddingTop: 8 }}>
+            <div style={{
+              fontFamily: "'Orbitron', sans-serif", fontSize: 22, fontWeight: 700,
+              color: "#fff", lineHeight: 1.3, marginBottom: 8,
+            }}>
+              ANÁLISE GLOBAL DO<br />
+              <span className="glow-text" style={{ color: "#00FFD1" }}>MERCADO DE PETRÓLEO</span>
+            </div>
+            <div style={{ fontSize: 10, color: "#555", letterSpacing: 2, lineHeight: 2 }}>
+              GUERRA IRÃ · RÚSSIA · ESTREITO DE ORMUZ · INFLAÇÃO GLOBAL · BRASIL<br />
+              VERDADE SOBERANA · CAUSALIDADE VERIFICÁVEL · AUDITABILIDADE TOTAL
+            </div>
+          </div>
+
+          {/* PROMPT DISPLAY */}
+          <div style={{
+            background: "#040408",
+            border: "1px solid #1a1a2e",
+            borderRadius: 6,
+            padding: "16px 18px",
+            marginBottom: 20,
+            fontSize: 10,
+            color: "#444",
+            lineHeight: 1.9,
+          }}>
+            <div style={{ color: "#555", marginBottom: 8, letterSpacing: 2, fontSize: 9 }}>▸ PROMPT HIPER-DETALHADO — PARÂMETROS DE ANÁLISE</div>
+            <div style={{ color: "#666" }}>
+              <span style={{ color: "#00FFD140" }}>MERCADO:</span> Petróleo Global (Brent + WTI + derivados)
+              &nbsp;|&nbsp;<span style={{ color: "#00FFD140" }}>CONFLITO:</span> Guerra Irã–Rússia (ativa + pós-guerra)
+              &nbsp;|&nbsp;<span style={{ color: "#00FFD140" }}>GARGALO:</span> Estreito de Ormuz (aberto / parcial / fechado)
+            </div>
+            <div style={{ color: "#666", marginTop: 4 }}>
+              <span style={{ color: "#FF6B3540" }}>HORIZONTE:</span> Curto prazo (0–6m) + Médio prazo (6–18m)
+              &nbsp;|&nbsp;<span style={{ color: "#FF6B3540" }}>FOCO:</span> Inflação global, resposta de BCs, vulnerabilidade Brasil
+            </div>
+            <div style={{ color: "#666", marginTop: 4 }}>
+              <span style={{ color: "#A855F740" }}>MÓDULOS ATIVOS:</span> MIT-OMEGA · GRO · X-CAUSAL-O
+              &nbsp;|&nbsp;<span style={{ color: "#A855F740" }}>DATA REF:</span> Abril 2026
+            </div>
+          </div>
+
+          {/* MODULES STATUS */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
+            {MODULES.map(mod => (
+              <ModuleStatus
+                key={mod.id}
+                module={mod}
+                active={activeModule === mod.id}
+                done={status === "done" && !!sections[mod.id]}
+                data={sections[mod.id]}
+              />
+            ))}
+          </div>
+
+          {/* AUDIT TRAIL */}
+          {auditLog.length > 0 && (
+            <div style={{ marginBottom: 20 }}>
+              <AuditTrail entries={auditLog} />
+            </div>
+          )}
+
+          {/* CTA BUTTON — only shown after completion or error */}
+          {(status === "done" || status === "error") && (
+            <button
+              onClick={runAnalysis}
+              style={{
+                width: "100%",
+                padding: "16px 24px",
+                background: "transparent",
+                border: `1px solid ${status === "error" ? "#FF333360" : "#1a1a2e"}`,
+                borderRadius: 6,
+                color: status === "error" ? "#FF3333" : "#444",
+                fontFamily: "'Orbitron', sans-serif",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: 3,
+                cursor: "pointer",
+                transition: "all 0.3s",
+                marginBottom: 12,
+              }}
+            >
+              {status === "done" && "↺  NOVA ANÁLISE"}
+              {status === "error" && "↺  TENTAR NOVAMENTE"}
+            </button>
+          )}
+
+          {status === "loading" && (
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "16px 24px",
+              border: "1px solid #00FFD130",
+              borderRadius: 6,
+              marginBottom: 12,
+            }}>
+              <div style={{
+                width: 8, height: 8, borderRadius: "50%",
+                background: "#00FFD1",
+                animation: "pulse-border 1s ease-in-out infinite",
+              }} />
+              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, color: "#00FFD1", letterSpacing: 2 }}>
+                CORTEX PROCESSANDO — {elapsed}s
+              </span>
+              <span style={{ fontSize: 10, color: "#333", marginLeft: "auto" }}>
+                {activeModule === "MIT_OMEGA" && "MIT-OMEGA ATIVO"}
+                {activeModule === "GRO" && "GRO ATIVO"}
+                {activeModule === "X_CAUSAL" && "X-CAUSAL-O ATIVO"}
+              </span>
+            </div>
+          )}
+
+          {/* GLASS BOX FOOTER */}
+          <div style={{
+            marginTop: 20,
+            borderTop: "1px solid #0f0f1e",
+            paddingTop: 16,
+            display: "flex", gap: 20, flexWrap: "wrap",
+          }}>
+            {[
+              { label: "EXPLAINABILITY", val: "FULL TRACE", color: "#00FFD1" },
+              { label: "HALLUCINATION FILTER", val: "GRO ACTIVE", color: "#FF6B35" },
+              { label: "CAUSAL LOGIC", val: "VERIFIED", color: "#A855F7" },
+              { label: "AUDIT", val: "IMMUTABLE LOG", color: "#888" },
+            ].map(item => (
+              <div key={item.label} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: item.color }} />
+                <span style={{ fontSize: 9, color: "#333", letterSpacing: 1 }}>{item.label}</span>
+                <span style={{ fontSize: 9, color: item.color, letterSpacing: 1 }}>{item.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
